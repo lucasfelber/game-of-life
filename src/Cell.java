@@ -29,6 +29,19 @@ public class Cell {
         }
     }
 
+    public void update(){
+        int neighbours = getNumberOfNeighbours();
+        if(state){
+            if(neighbours < 2 || neighbours > 3){
+                state = false;
+            }
+        }else{
+            if(neighbours == 3){
+                state = true;
+            }
+        }
+    }
+
     public int getNumberOfNeighbours(){
         int result = 0;
         for(int a = -1; a <= 1; a++){
