@@ -1,13 +1,17 @@
 import processing.core.PApplet;
 
 public class Sketch extends PApplet {
+
+    Grid grid;
+
     public void settings(){
-        size(400,400);
+        size(401,401);
+        grid = new Grid(this, 20);
     }
 
     public void draw(){
         background(0);
-        ellipse(mouseX, mouseY, 20, 20);
+        grid.show();
     }
 
     public static void main(String[] args){
