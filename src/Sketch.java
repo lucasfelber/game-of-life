@@ -6,6 +6,7 @@ public class Sketch extends PApplet {
     int cols;
     int rows;
     int cellSize;
+    boolean simulating;
 
     public void settings() {
         size(600, 600);
@@ -16,11 +17,13 @@ public class Sketch extends PApplet {
 
         grid = new int[cols][rows];
 
-        for (int i = 0; i < cols; i++) {
-            for (int j = 0; j < rows; j++) {
-                grid[i][j] = floor(random(2));
-            }
-        }
+        simulating = false;
+
+        grid[2][1] = 1;
+        grid[3][2] = 1;
+        grid[3][3] = 1;
+        grid[2][3] = 1;
+        grid[1][3] = 1;
     }
 
     public void draw(){
@@ -38,25 +41,41 @@ public class Sketch extends PApplet {
             }
         }
 
-        int[][] next = new int[cols][rows];
+        if(simulating) {
+            int[][] next = new int[cols][rows];
 
-        for(int i = 0; i < cols; i++){
-            for(int j = 0; j < rows; j++){
-                int state = grid[i][j];
+            for (int i = 0; i < cols; i++) {
+                for (int j = 0; j < rows; j++) {
+                    int state = grid[i][j];
 
-                int sum = 0;
-                int neighbours = countNeighbours(grid, i, j);
+                    int sum = 0;
+                    int neighbours = countNeighbours(grid, i, j);
 
-                if(state == 0 && neighbours == 3){
-                    next[i][j] = 1;
-                }else if(state == 1 && (neighbours < 2 || neighbours > 3)){
-                    next[i][j] = 0;
-                }else{
-                    next[i][j] = state;
+                    if (state == 0 && neighbours == 3) {
+                        next[i][j] = 1;
+                    } else if (state == 1 && (neighbours < 2 || neighbours > 3)) {
+                        next[i][j] = 0;
+                    } else {
+                        next[i][j] = state;
+                    }
                 }
             }
+            grid = next;
         }
-        grid = next;
+    }
+
+    public void keyPressed(){
+        if(key == ' '){
+            simulating = !simulating;
+        }
+    }
+
+    public void mouseClicked(){
+        if(grid[mouseX/cellSize][mouseY/cellSize] == 0){
+            grid[mouseX/cellSize][mouseY/cellSize] = 1;
+        }else{
+            grid[mouseX/cellSize][mouseY/cellSize] = 0;
+        }
     }
 
     public int countNeighbours(int[][] grid, int x, int y){
